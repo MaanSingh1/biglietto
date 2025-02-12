@@ -1,261 +1,231 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Biglietto Virtuale San Valentino</title>
-  <!-- Google Fonts per un look moderno -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biglietto d'Amore - San Valentino</title>
+  <!-- Google Fonts per uno stile moderno -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <!-- GSAP per animazioni fluide -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/gsap.min.js"></script>
   <style>
     /* ====== STILI GLOBALI ====== */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Poppins', sans-serif;
       overflow: hidden;
-      color: #fff;
       width: 100%;
       height: 100vh;
-      background: linear-gradient(135deg, #654ea3, #eaafc8);
+      background: #000;
+      position: relative;
     }
     .screen {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
+      flex-direction: column;
       text-align: center;
-      padding: 20px;
     }
-    button {
-      background: #FF8DAA;
-      border: none;
-      padding: 12px 24px;
-      font-size: 1.1em;
-      color: #fff;
-      border-radius: 30px;
+    /* ====== SCREEN 1: BACKGROUND SWIRL E CUORE INIZIALE ====== */
+    #screen1 { background: #000; }
+    .swirl {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at center, #ff9a9e, #fad0c4);
+      animation: swirl 12s linear infinite;
+      z-index: -1;
+    }
+    @keyframes swirl {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    #heartContainer {
       cursor: pointer;
-      margin-top: 20px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-      transition: transform 0.2s, background 0.2s;
+      z-index: 1;
     }
-    button:hover {
-      background: #FF6F8F;
-      transform: scale(1.05);
-    }
-    button:active {
-      transform: scale(0.95);
-    }
-    /* ====== SCREEN 1: MISTERO & ANTICIPAZIONE ====== */
-    #screen1 {
-      background: linear-gradient(135deg, #2C3E50, #4CA1AF);
-    }
-    .typewriter {
-      font-size: 1.6em;
-      max-width: 80%;
-      margin-bottom: 30px;
-      overflow: hidden;
-      border-right: 2px solid rgba(255,255,255,0.75);
-      white-space: nowrap;
-    }
-    /* ====== SCREEN 2: CUORE INTERATTIVO ====== */
-    #screen2 {
-      background: linear-gradient(135deg, #8360c3, #2ebf91);
-    }
-    .heart-container {
+    #mainHeart {
       width: 150px;
       height: 150px;
-      margin-bottom: 20px;
     }
-    .heart-svg {
-      width: 100%;
-      height: 100%;
+    .startText {
+      margin-top: 20px;
+      font-size: 1.2em;
+      color: #fff;
+      opacity: 0.8;
     }
-    .screen2-text {
-      font-size: 1.3em;
-      opacity: 0;
-      margin-bottom: 20px;
-    }
-    /* ====== SCREEN 3: MESSAGGIO SEGRETO ====== */
-    #screen3 {
-      background: rgba(0, 0, 0, 0.7);
-      backdrop-filter: blur(8px);
-      padding: 30px;
-    }
-    .secret-text {
-      font-size: 1.4em;
-      line-height: 1.6;
-      max-width: 90%;
-    }
-    /* ====== SCREEN 4: IMPATTO FINALE ====== */
-    #screen4 {
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
-      position: relative;
-    }
-    .final-image {
-      width: 80%;
-      max-width: 350px;
-      border-radius: 15px;
-      filter: blur(8px);
-      transition: filter 1s;
-    }
-    .final-message {
+    /* Frammenti del cuore (generati al tocco) */
+    .heartFragment {
       position: absolute;
-      bottom: 30px;
-      background: rgba(0,0,0,0.5);
-      padding: 15px 25px;
-      border-radius: 25px;
+      pointer-events: none;
+    }
+    /* ====== SCREEN 2: MESSAGGIO CON EFFETTO TYPEWRITER ====== */
+    #screen2 { background: linear-gradient(135deg, #8e44ad, #3498db); }
+    .typewriter {
       font-size: 1.5em;
+      max-width: 90%;
+      color: #fff;
+      border-right: 2px solid rgba(255,255,255,0.75);
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    /* ====== SCREEN 3: FINALE CON MESSAGGIO E SPARKLES ====== */
+    #screen3 { background: linear-gradient(135deg, #ff758c, #ff7eb3); }
+    .finalMessage {
+      font-size: 2em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+    .sparkle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background: radial-gradient(circle, #fff, #ffd700);
+      border-radius: 50%;
       opacity: 0;
     }
   </style>
 </head>
 <body>
-  <!-- ====== SCREEN 1: MISTERO & ANTICIPAZIONE ====== -->
+  <!-- ====== SCREEN 1: CUORE INIZIALE CON BACKGROUND SWIRL ====== -->
   <div id="screen1" class="screen">
-    <div id="typewriter" class="typewriter"></div>
-    <button id="btn1">Clicca per scoprire</button>
-  </div>
-  
-  <!-- ====== SCREEN 2: CUORE INTERATTIVO ====== -->
-  <div id="screen2" class="screen" style="display: none;">
-    <div class="heart-container">
-      <!-- SVG del cuore per una forma più elegante -->
-      <svg class="heart-svg" viewBox="0 0 32 29.6">
-        <path id="heartPath" d="M23.6,0c-2.6,0-5,1.1-6.6,2.9C15.4,1.1,13,0,10.4,0C4.7,0,0,4.7,0,10.4c0,7.8,7.2,13.9,18,19.2l1.3,0.7 l1.3-0.7c10.8-5.3,18-11.4,18-19.2C32,4.7,27.3,0,23.6,0z" fill="#FF8DAA"/>
+    <div class="swirl"></div>
+    <div id="heartContainer">
+      <svg id="mainHeart" viewBox="0 0 32 29.6">
+        <path d="M23.6,0c-2.6,0-5,1.1-6.6,2.9C15.4,1.1,13,0,10.4,0C4.7,0,0,4.7,0,10.4c0,7.8,7.2,13.9,18,19.2l1.3,0.7
+          l1.3-0.7c10.8-5.3,18-11.4,18-19.2C32,4.7,27.3,0,23.6,0z" fill="#FF6F61"/>
       </svg>
     </div>
-    <div id="screen2Text" class="screen2-text">Sai perché batte così?</div>
-    <button id="btn2" style="opacity: 0;">Scoprilo</button>
+    <div class="startText">Tocca per iniziare</div>
   </div>
-  
-  <!-- ====== SCREEN 3: MESSAGGIO SEGRETO ====== -->
+
+  <!-- ====== SCREEN 2: MESSAGGIO CON EFFETTO TYPEWRITER ====== -->
+  <div id="screen2" class="screen" style="display: none;">
+    <div id="typewriterText" class="typewriter"></div>
+  </div>
+
+  <!-- ====== SCREEN 3: FINALE CON MESSAGGIO E SPARKLES ====== -->
   <div id="screen3" class="screen" style="display: none;">
-    <div id="secretText" class="secret-text"></div>
+    <div class="finalMessage" id="finalMessage">Ti amo, ogni battito è per te</div>
+    <div id="sparklesContainer"></div>
   </div>
-  
-  <!-- ====== SCREEN 4: IMPATTO FINALE ====== -->
-  <div id="screen4" class="screen" style="display: none;">
-    <img id="finalImage" class="final-image" src="https://via.placeholder.com/350x350.png?text=Foto+Speciale" alt="Foto Speciale">
-    <div id="finalMessage" class="final-message">Tu sei la mia cosa più bella.</div>
-  </div>
-  
+
   <script>
-    // Funzione typewriter per scrivere i testi lettera per lettera
+    /* Funzione typewriter per scrivere i testi lettera per lettera */
     function typeWriter(element, text, speed, callback) {
       let i = 0;
       function type() {
-        if (i < text.length) {
+        if(i < text.length) {
           element.innerHTML += text.charAt(i);
           i++;
           setTimeout(type, speed);
-        } else if (callback) {
+        } else if(callback) {
           callback();
         }
       }
       type();
     }
-    
-    // ====== SCREEN 1: MISTERO & ANTICIPAZIONE ======
-    const typewriterElem = document.getElementById('typewriter');
-    const message1 = "C'è qualcosa che voglio dirti... ma non con le solite parole.";
-    typeWriter(typewriterElem, message1, 60);
-    
-    document.getElementById('btn1').addEventListener('click', () => {
-      if(navigator.vibrate) navigator.vibrate(50);
+
+    /* ====== SCREEN 1: AL TOCCO, IL CUORE SI FRAMMENTA E TRANSIZIONE A SCREEN 2 ====== */
+    document.getElementById("heartContainer").addEventListener("click", function() {
+      // Evita click multipli
+      if(this.clicked) return;
+      this.clicked = true;
+
+      const heart = document.getElementById("mainHeart");
+      const heartRect = heart.getBoundingClientRect();
+      // Genera 12 frammenti
+      for(let i = 0; i < 12; i++){
+        let frag = document.createElement("div");
+        frag.classList.add("heartFragment");
+        // Inserisce l'SVG del cuore
+        frag.innerHTML = heart.outerHTML;
+        // Posiziona il frammento nello stesso punto del cuore originale
+        frag.style.left = heartRect.left + "px";
+        frag.style.top = heartRect.top + "px";
+        document.body.appendChild(frag);
+        // Animazione: ogni frammento esplode in direzioni casuali
+        gsap.to(frag, {
+          duration: 1,
+          x: (Math.random()-0.5)*300,
+          y: (Math.random()-0.5)*300,
+          rotation: Math.random()*720,
+          opacity: 0,
+          ease: "power2.out",
+          delay: 0.1
+        });
+      }
+      // Sfuma il cuore originale
+      gsap.to("#heartContainer", {duration: 0.5, opacity: 0});
+      // Dopo l'esplosione, transizione a Screen 2
       gsap.to("#screen1", {
-        duration: 0.6, 
+        duration: 0.5, 
         opacity: 0, 
-        onComplete: () => {
-          document.getElementById('screen1').style.display = 'none';
-          document.getElementById('screen2').style.display = 'flex';
-          gsap.fromTo("#screen2", {opacity: 0}, {duration: 0.6, opacity: 1});
-          startHeartAnimation();
+        delay: 1.2,
+        onComplete: function(){
+          document.getElementById("screen1").style.display = "none";
+          document.getElementById("screen2").style.display = "flex";
+          gsap.fromTo("#screen2", {opacity: 0}, {duration: 0.5, opacity: 1});
+          startTypewriter();
         }
       });
     });
-    
-    // ====== SCREEN 2: CUORE INTERATTIVO ======
-    let heartTween;
-    function startHeartAnimation() {
-      heartTween = gsap.to("#heartPath", {
-        scale: 1.05,
-        transformOrigin: "50% 50%",
-        duration: 0.8,
-        yoyo: true,
-        repeat: -1,
-        ease: "power1.inOut"
+
+    /* ====== SCREEN 2: MESSAGGIO CON EFFETTO TYPEWRITER ====== */
+    function startTypewriter(){
+      const textElem = document.getElementById("typewriterText");
+      const message = "L'amore è un viaggio straordinario, un'onda di emozioni che trasforma ogni istante in magia. Lascia che il tuo cuore segua questa melodia...";
+      typeWriter(textElem, message, 40, function(){
+        // Al termine, attendi un attimo e passa alla schermata finale
+        setTimeout(transitionToFinal, 1500);
       });
     }
-    
-    // Interazione: al tocco sul cuore, acceleriamo l'animazione e mostriamo il testo e il bottone
-    let heartInteracted = false;
-    document.querySelector('.heart-container').addEventListener('touchstart', heartInteraction);
-    document.querySelector('.heart-container').addEventListener('mousedown', heartInteraction);
-    
-    function heartInteraction() {
-      if (!heartInteracted) {
-        heartInteracted = true;
-        heartTween.timeScale(2);
-        if(navigator.vibrate) navigator.vibrate(30);
-        gsap.to("#screen2Text", {duration: 0.5, opacity: 1});
-        gsap.to("#btn2", {duration: 0.5, opacity: 1});
+
+    function transitionToFinal(){
+      gsap.to("#screen2", {
+        duration: 0.5,
+        opacity: 0,
+        onComplete: function(){
+          document.getElementById("screen2").style.display = "none";
+          document.getElementById("screen3").style.display = "flex";
+          gsap.fromTo("#screen3", {opacity: 0}, {duration: 0.5, opacity: 1});
+          createSparkles();
+        }
+      });
+    }
+
+    /* ====== SCREEN 3: CREAZIONE DELL'EFFETTO "SPARKLES" ====== */
+    function createSparkles(){
+      const container = document.getElementById("sparklesContainer");
+      const sparkleCount = 30;
+      for(let i = 0; i < sparkleCount; i++){
+        let sparkle = document.createElement("div");
+        sparkle.classList.add("sparkle");
+        // Posizionamento casuale sullo schermo
+        sparkle.style.left = Math.random() * window.innerWidth + "px";
+        sparkle.style.top = Math.random() * window.innerHeight + "px";
+        container.appendChild(sparkle);
+        // Animazione: il "sparkle" si illumina, sale e poi svanisce, in loop
+        gsap.to(sparkle, {
+          duration: 1 + Math.random(),
+          y: -100 - Math.random()*200,
+          opacity: 1,
+          ease: "power2.out",
+          yoyo: true,
+          repeat: -1,
+          delay: Math.random()
+        });
       }
     }
-    
-    document.getElementById('btn2').addEventListener('click', () => {
+
+    // Opzionale: al tocco sullo schermo finale, genera ulteriori "sparkles" e vibra per dare più impatto
+    document.getElementById("screen3").addEventListener("click", function(){
+      createSparkles();
       if(navigator.vibrate) navigator.vibrate(50);
-      gsap.to("#screen2", {
-        duration: 0.6, 
-        opacity: 0, 
-        onComplete: () => {
-          document.getElementById('screen2').style.display = 'none';
-          document.getElementById('screen3').style.display = 'flex';
-          gsap.fromTo("#screen3", {opacity: 0}, {duration: 0.6, opacity: 1});
-          startSecretMessage();
-        }
-      });
-    });
-    
-    // ====== SCREEN 3: MESSAGGIO SEGRETO ======
-    function startSecretMessage() {
-      const secretElem = document.getElementById('secretText');
-      const secretMessage = "Se avessi solo un minuto per dirti tutto quello che provo...\n\n...non basterebbe mai.\n\nPer questo ho creato questo per te.";
-      typeWriter(secretElem, secretMessage, 50, () => {
-        setTimeout(() => {
-          gsap.to("#screen3", {
-            duration: 0.6, 
-            opacity: 0, 
-            onComplete: () => {
-              document.getElementById('screen3').style.display = 'none';
-              document.getElementById('screen4').style.display = 'flex';
-              gsap.fromTo("#screen4", {opacity: 0}, {duration: 0.6, opacity: 1});
-              revealFinalScreen();
-            }
-          });
-        }, 1500);
-      });
-    }
-    
-    // ====== SCREEN 4: IMPATTO FINALE ======
-    function revealFinalScreen() {
-      gsap.to("#finalImage", {duration: 1, filter: "blur(0px)"});
-      gsap.to("#finalMessage", {duration: 1, opacity: 1, delay: 1});
-    }
-    
-    // Al tocco sulla foto, riproduciamo l'animazione del messaggio (effetto "handwriting" simulato)
-    document.getElementById('finalImage').addEventListener('click', () => {
-      if(navigator.vibrate) navigator.vibrate(50);
-      gsap.fromTo("#finalMessage", {opacity: 0}, {duration: 1, opacity: 1});
     });
   </script>
 </body>

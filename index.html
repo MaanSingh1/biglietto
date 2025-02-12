@@ -2,14 +2,14 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biglietto d'Amore Pixel Art - San Valentino</title>
-  <!-- Font pixel art -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Biglietto d'Amore - San Valentino Pixel Art</title>
+  <!-- Font in stile pixel art -->
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <!-- GSAP per animazioni -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/gsap.min.js"></script>
   <style>
-    /* STILI GLOBALI */
+    /* Global styles per effetto pixel art */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       width: 100%;
@@ -41,8 +41,7 @@
       margin-top: 20px;
       image-rendering: pixelated;
     }
-    
-    /* SCREEN 1: LE SUPERIORI */
+    /* SCREEN 1: Introduzione */
     #screen1 {
       background: linear-gradient(135deg, #ff9a9e, #fad0c4);
     }
@@ -51,43 +50,37 @@
       margin-bottom: 20px;
       opacity: 0;
     }
-    /* Cuoricini pixel art */
-    .pixel-heart {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background: #E91E63;
-      clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 80%, 20% 100%, 0% 35%);
-      image-rendering: pixelated;
-    }
-    
-    /* SCREEN 2: RITROVARSI & CAPODANNO A LUGANO */
+    /* SCREEN 2: Cuore e Freccia di Cupido */
     #screen2 {
       background: linear-gradient(135deg, #f8bbd0, #c2185b);
       display: none;
     }
-    .s2-text {
-      font-size: 16px;
-      margin-bottom: 20px;
-      opacity: 0;
+    #heartContainer {
+      position: relative;
+      width: 100px;
+      height: 100px;
     }
-    .pixel-heart-big {
-      width: 80px;
-      height: 80px;
+    /* Il cuore in pixel art */
+    #pixelHeart {
+      width: 100px;
+      height: 100px;
       background: #E91E63;
       clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 80%, 20% 100%, 0% 35%);
       image-rendering: pixelated;
-    }
-    /* Pixel "snow" per richiamare l'inverno */
-    .pixel-snow {
       position: absolute;
-      width: 8px;
-      height: 8px;
-      background: #fff;
+      top: 0;
+      left: 0;
+    }
+    /* La freccia di Cupido (SVG) */
+    #cupidArrow {
+      position: absolute;
+      width: 120px;
+      height: 20px;
+      top: 40px; /* posiziona la freccia per colpire il cuore */
+      left: -150px; /* partenza offscreen */
       image-rendering: pixelated;
     }
-    
-    /* SCREEN 3: LA CONFESSIONE */
+    /* SCREEN 3: Il Biglietto */
     #screen3 {
       background: linear-gradient(135deg, #ff80ab, #ff4081);
       display: none;
@@ -98,119 +91,104 @@
       border-right: 2px solid rgba(255,255,255,0.7);
       white-space: nowrap;
       overflow: hidden;
-      width: 0;
+      width: 0; /* per effetto typewriter */
     }
   </style>
 </head>
 <body>
-  <!-- SCREEN 1: LE SUPERIORI -->
+  <!-- SCREEN 1: Introduzione -->
   <div id="screen1" class="screen">
-    <div class="s1-text">Ci siamo conosciuti alle superiori...</div>
+    <div class="s1-text">C'è qualcosa che voglio dirti... ma non con le solite parole</div>
     <button id="btn1">Continua</button>
   </div>
   
-  <!-- SCREEN 2: RITROVARSI & CAPODANNO A LUGANO -->
+  <!-- SCREEN 2: Cuore colpito dalla freccia di Cupido -->
   <div id="screen2" class="screen">
-    <div class="s2-text">Dopo anni, ci siamo ritrovati.<br>Capodanno a Lugano, tra neve e luci...</div>
-    <div class="pixel-heart-big" id="heart2"></div>
+    <div id="heartContainer">
+      <div id="pixelHeart"></div>
+      <svg id="cupidArrow" viewBox="0 0 120 20">
+        <!-- Forma semplice della freccia -->
+        <polygon points="0,10 80,10 80,0 120,15 80,30 80,20 0,20" fill="#fff"/>
+      </svg>
+    </div>
   </div>
   
-  <!-- SCREEN 3: LA CONFESSIONE -->
+  <!-- SCREEN 3: Il Biglietto -->
   <div id="screen3" class="screen">
     <div class="s3-text" id="finalMsg"></div>
   </div>
   
   <script>
-    // Utilizziamo un easing a steps per dare l'effetto "pixelato"
+    // Usiamo un easing a steps per dare l'effetto "pixelato"
     const stepsEase = "steps(10)";
-
-    // Animazione Screen 1: fade in del testo con effetto a scatti
+    
+    // SCREEN 1: Fade in del testo
     gsap.to(".s1-text", { duration: 1, opacity: 1, ease: stepsEase, delay: 0.5 });
-
-    // Funzione per creare cuoricini pixelati che cadono
-    function createPixelHearts() {
-      for (let i = 0; i < 15; i++) {
-        let heart = document.createElement("div");
-        heart.className = "pixel-heart";
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.top = -20 + "px";
-        document.getElementById("screen1").appendChild(heart);
-        gsap.to(heart, {
-          duration: 3 + Math.random() * 2,
-          y: window.innerHeight + 50,
-          ease: stepsEase,
-          delay: Math.random() * 2,
-          onComplete: function() {
-            heart.remove();
-          }
-        });
-      }
-    }
-    // Crea cuoricini ogni 2 secondi
-    setInterval(createPixelHearts, 2000);
-
-    // Passaggio da Screen 1 a Screen 2
+    
+    // Passaggio da Screen 1 a Screen 2 al click
     document.getElementById("btn1").addEventListener("click", function() {
       if(navigator.vibrate) navigator.vibrate(50);
-      gsap.to("#screen1", { duration: 0.8, opacity: 0, ease: stepsEase, onComplete: function(){
-        document.getElementById("screen1").style.display = "none";
-        document.getElementById("screen2").style.display = "flex";
-        gsap.fromTo("#screen2", { opacity: 0 }, { duration: 0.8, opacity: 1, ease: stepsEase });
-        screen2Animation();
-      }});
-    });
-
-    // Animazioni Screen 2: testo, battito del cuore e neve pixelata
-    function screen2Animation() {
-      gsap.to(".s2-text", { duration: 1, opacity: 1, ease: stepsEase, delay: 0.5 });
-      // Animazione battito del cuore (a scatti)
-      gsap.to("#heart2", {
-        duration: 0.5,
-        scale: 1.2,
+      gsap.to("#screen1", {
+        duration: 0.8, 
+        opacity: 0, 
         ease: stepsEase,
-        yoyo: true,
-        repeat: -1
+        onComplete: function(){
+          document.getElementById("screen1").style.display = "none";
+          document.getElementById("screen2").style.display = "flex";
+          gsap.fromTo("#screen2", { opacity: 0 }, { duration: 0.8, opacity: 1, ease: stepsEase });
+          animateArrow();
+        }
       });
-      // Crea "snowflakes" pixelate per evocare il Capodanno a Lugano
-      function createSnowflake() {
-        let snow = document.createElement("div");
-        snow.className = "pixel-snow";
-        snow.style.left = Math.random() * 100 + "vw";
-        snow.style.top = -10 + "px";
-        document.getElementById("screen2").appendChild(snow);
-        gsap.to(snow, {
-          duration: 4 + Math.random() * 2,
-          y: window.innerHeight,
-          ease: stepsEase,
-          delay: Math.random(),
-          onComplete: function() {
-            snow.remove();
-          }
-        });
-      }
-      setInterval(createSnowflake, 500);
-      // Dopo alcuni secondi, passa alla Screen 3
-      setTimeout(function(){
-        gsap.to("#screen2", { duration: 0.8, opacity: 0, ease: stepsEase, onComplete: function(){
-          document.getElementById("screen2").style.display = "none";
-          document.getElementById("screen3").style.display = "flex";
-          gsap.fromTo("#screen3", { opacity: 0 }, { duration: 0.8, opacity: 1, ease: stepsEase });
-          screen3Animation();
-        }});
-      }, 6000);
+    });
+    
+    // Funzione per animare la freccia che colpisce il cuore
+    function animateArrow() {
+      gsap.to("#cupidArrow", {
+        duration: 1,
+        x: 180, // sposta la freccia fino al cuore (aggiusta se necessario)
+        ease: stepsEase,
+        onComplete: function() {
+          // Effetto "scossa" sul cuore per enfatizzare il colpo
+          gsap.to("#pixelHeart", {
+            duration: 0.2,
+            x: -5,
+            yoyo: true,
+            repeat: 3,
+            ease: stepsEase
+          });
+          // Dopo il colpo, aspetta un attimo e passa al biglietto
+          setTimeout(function(){
+            gsap.to("#screen2", {
+              duration: 0.8,
+              opacity: 0,
+              ease: stepsEase,
+              onComplete: function(){
+                document.getElementById("screen2").style.display = "none";
+                document.getElementById("screen3").style.display = "flex";
+                gsap.fromTo("#screen3", { opacity: 0 }, { duration: 0.8, opacity: 1, ease: stepsEase });
+                animateFinalMessage();
+              }
+            });
+          }, 1000);
+        }
+      });
     }
-
-    // Animazione Screen 3: effetto typewriter in stile pixel art
-    function screen3Animation() {
-      const finalMsg = "Ci siamo conosciuti alle superiori,<br>ci siamo persi e ritrovati.<br>Capodanno a Lugano, tra neve e luci,<br>e poi, in un attimo magico,<br>lei si è confessata a me...<br><br>Ogni pixel del nostro amore è eterno.";
+    
+    // Effetto typewriter per il messaggio finale nella Screen 3
+    function animateFinalMessage() {
+      const finalMsgElem = document.getElementById("finalMsg");
+      const finalMsg = "Ci siamo conosciuti alle superiori, anche se c'era qualcosa che non si è mai concretizzato.\nDopo tempo, ci siamo rincontrati e abbiamo passato un Capodanno insieme.\nDa quel momento, le cose sono cambiate.\n\nVoglio dirti quanto ci tengo a te: sei la mia prima ragazza e, nonostante le differenze culturali, quello che provo è genuino.\nSono felice di averti nella mia vita.\n\nBuon San Valentino.";
       let i = 0;
-      let txt = "";
-      let speed = 40; // ms per carattere
+      let displayedText = "";
+      const speed = 40; // ms per carattere
       function typeWriter() {
         if (i < finalMsg.length) {
-          txt += finalMsg.charAt(i);
-          document.getElementById("finalMsg").innerHTML = txt;
+          let currentChar = finalMsg.charAt(i);
+          displayedText += (currentChar === "\n") ? "<br>" : currentChar;
+          finalMsgElem.innerHTML = displayedText;
           i++;
+          // Espandi gradualmente la larghezza per simulare il cursore
+          finalMsgElem.style.width = (i * 0.6) + "em";
           setTimeout(typeWriter, speed);
         }
       }

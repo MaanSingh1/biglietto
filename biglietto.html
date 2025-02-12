@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Biglietto Virtuale San Valentino</title>
+  <!-- GSAP per animazioni fluide -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/gsap.min.js"></script>
+  <style>
+    /* ====== STILI GLOBALI ====== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Helvetica', Arial, sans-serif;
+      color: #fff;
+    }
+    .screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 1.2em;
+      background: #ff6b6b;
+      border: none;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:active {
+      background: #ff4c4c;
+    }
+    
+    /* ====== SCREEN 1: MISTERO & ANTICIPAZIONE ====== */
+    #screen1 {
+      background: radial-gradient(ellipse at center, #1a1a1a 0%, #000 70%);
+    }
+    /* Effetto macchina da scrivere */
+    .typewriter {
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 0.15em solid orange;
+    }
+    
+    /* ====== SCREEN 2: CUORE CHE BATE ====== */
+    #screen2 {
+      background: #111;
+      flex-direction: column;
+    }
+    /* Creazione del cuore con CSS */
+    .heart {
+      width: 100px;
+      height: 90px;
+      position: relative;
+      transform: rotate(-45deg);
+      background: #ff6b6b;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 100px;
+      height: 90px;
+      background: #ff6b6b;
+      border-radius: 50%;
+    }
+    .heart::before {
+      top: -50px;
+      left: 0;
+    }
+    .heart::after {
+      left: 50px;
+      top: 0;
+    }
+    
+    /* ====== SCREEN 3: MESSAGGIO SEGRETO ====== */
+    #screen3 {
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      padding: 20px;
+      text-align: center;
+    }
+    #secretMessage {
+      font-size: 1.5em;
+      line-height: 1.5;
+    }
+    
+    /* ====== SCREEN 4: EFFETTO WOW FINALE ====== */
+    #screen4 {
+      background: #000;
+      position: relative;
+    }
+    .finalBackground {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      z-index: -1;
+    }
+    .photoContainer {
+      position: relative;
+      text-align: center;
+    }
+    #finalPhoto {
+      max-width: 80%;
+      border-radius: 10px;
+      filter: blur(8px);
+      transition: filter 1s;
+    }
+    .dedica {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 2em;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 20px;
+      border-radius: 5px;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- ====== SCREEN 1: MISTERO & ANTICIPAZIONE ====== -->
+  <div id="screen1" class="screen">
+    <p id="typewriterText" class="typewriter"></p>
+    <button id="btnScreen1" class="btn">Clicca per scoprire</button>
+  </div>
+  
+  <!-- ====== SCREEN 2: CUORE CHE BATE ====== -->
+  <div id="screen2" class="screen" style="display: none;">
+    <div id="heart" class="heart"></div>
+    <p id="heartText" style="display: none; font-size: 1.3em;">Sai perché batte così?</p>
+    <button id="btnScreen2" class="btn" style="display: none;">Scoprilo</button>
+  </div>
+  
+  <!-- ====== SCREEN 3: MESSAGGIO SEGRETO ANIMATO ====== -->
+  <div id="screen3" class="screen" style="display: none;">
+    <div class="letter">
+      <p id="secretMessage"></p>
+    </div>
+  </div>
+  
+  <!-- ====== SCREEN 4: EFFETTO WOW FINALE ====== -->
+  <div id="screen4" class="screen" style="display: none;">
+    <div class="finalBackground"></div>
+    <div class="photoContainer">
+      <!-- Sostituisci l'URL con la foto vera -->
+      <img id="finalPhoto" src="https://via.placeholder.com/300" alt="La nostra foto" />
+      <div id="dedica" class="dedica">Tu sei la mia cosa più bella.</div>
+    </div>
+  </div>
+  
+  <script>
+    /***************************************
+     * SCREEN 1: MISTERO & ANTICIPAZIONE
+     ***************************************/
+    // Funzione typewriter per far apparire il testo lettera per lettera
+    function typeWriter(element, text, speed, callback) {
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else if (callback) {
+          callback();
+        }
+      }
+      type();
+    }
+    
+    const typewriterElement = document.getElementById('typewriterText');
+    const text1 = "C'è qualcosa che voglio dirti... ma non con le solite parole.";
+    typeWriter(typewriterElement, text1, 50);
+    
+    // Al click sul bottone, vibrazione e transizione alla schermata 2
+    document.getElementById('btnScreen1').addEventListener('click', function() {
+      if (navigator.vibrate) navigator.vibrate(50);
+      gsap.to("#screen1", {
+        duration: 0.5,
+        opacity: 0,
+        onComplete: function() {
+          document.getElementById('screen1').style.display = 'none';
+          document.getElementById('screen2').style.display = 'flex';
+          gsap.fromTo("#screen2", { opacity: 0 }, { duration: 0.5, opacity: 1 });
+          startHeartBeat();
+        }
+      });
+    });
+    
+    /***************************************
+     * SCREEN 2: CUORE CHE BATE
+     ***************************************/
+    // Animazione del battito del cuore con GSAP
+    let heartBeatTween;
+    function startHeartBeat() {
+      heartBeatTween = gsap.to("#heart", {
+        scale: 1.1,
+        duration: 0.6,
+        yoyo: true,
+        repeat: -1,
+        ease: "power1.inOut"
+      });
+    }
+    
+    // Al tocco (o click) sul cuore, acceleriamo il battito e attiviamo la vibrazione
+    let heartInteracted = false;
+    document.getElementById('heart').addEventListener('touchstart', heartInteraction);
+    document.getElementById('heart').addEventListener('mousedown', heartInteraction);
+    
+    function heartInteraction() {
+      if (!heartInteracted) {
+        heartInteracted = true;
+        heartBeatTween.timeScale(2);
+        if (navigator.vibrate) navigator.vibrate(30);
+        // Dopo 2 secondi, mostriamo il testo e il bottone
+        setTimeout(() => {
+          gsap.to("#heartText", { duration: 0.5, display: "block", opacity: 1 });
+          gsap.to("#btnScreen2", { duration: 0.5, display: "block", opacity: 1 });
+        }, 2000);
+      }
+    }
+    
+    // Al click del bottone "Scoprilo", transizione verso la schermata 3
+    document.getElementById('btnScreen2').addEventListener('click', function() {
+      if (navigator.vibrate) navigator.vibrate(50);
+      gsap.to("#screen2", {
+        duration: 0.5,
+        opacity: 0,
+        onComplete: function() {
+          document.getElementById('screen2').style.display = 'none';
+          document.getElementById('screen3').style.display = 'flex';
+          gsap.fromTo("#screen3", { opacity: 0 }, { duration: 0.5, opacity: 1 });
+          startSecretMessage();
+        }
+      });
+    });
+    
+    /***************************************
+     * SCREEN 3: MESSAGGIO SEGRETO ANIMATO
+     ***************************************/
+    function startSecretMessage() {
+      const secretElement = document.getElementById('secretMessage');
+      const secretText = "Se avessi solo un minuto per dirti tutto quello che provo...\n\n...non basterebbe mai.\n\nPer questo ho creato questo per te.";
+      let i = 0;
+      function typeSecret() {
+        if (i < secretText.length) {
+          let char = secretText.charAt(i);
+          if (char === "\n") {
+            secretElement.innerHTML += "<br/>";
+          } else {
+            secretElement.innerHTML += char;
+          }
+          i++;
+          setTimeout(typeSecret, 50);
+        } else {
+          // Dopo aver finito, aspettiamo un attimo e passiamo alla schermata 4
+          setTimeout(() => {
+            gsap.to("#screen3", {
+              duration: 0.5,
+              opacity: 0,
+              onComplete: function() {
+                document.getElementById('screen3').style.display = 'none';
+                document.getElementById('screen4').style.display = 'flex';
+                gsap.fromTo("#screen4", { opacity: 0 }, { duration: 0.5, opacity: 1 });
+                startFinalScreen();
+              }
+            });
+          }, 1000);
+        }
+      }
+      typeSecret();
+    }
+    
+    /***************************************
+     * SCREEN 4: EFFETTO WOW FINALE
+     ***************************************/
+    function startFinalScreen() {
+      // Sfumiamo la foto: da blur ad una chiarezza totale
+      gsap.to("#finalPhoto", { duration: 1, filter: "blur(0px)" });
+      // Mostriamo la dedica con un fade-in
+      gsap.to("#dedica", { duration: 1, opacity: 1, delay: 1 });
+    }
+    
+    // Se l'utente tocca la foto, mostra un messaggio personalizzato aggiuntivo
+    // (In questo esempio la stessa dedica viene ripresentata con un effetto "handwriting")
+    document.getElementById('finalPhoto').addEventListener('click', function() {
+      // Se la dedica è già visibile, la animiamo nuovamente
+      gsap.fromTo("#dedica", { opacity: 0 }, { duration: 1, opacity: 1 });
+      // Potresti aggiungere ulteriori interazioni o messaggi qui
+    });
+  </script>
+</body>
+</html>

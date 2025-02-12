@@ -20,6 +20,7 @@
       overflow: hidden;
       background: #f8f0f8;
       color: #333;
+      -webkit-tap-highlight-color: transparent;
     }
     .screen {
       position: absolute;
@@ -33,6 +34,7 @@
       align-items: center;
       text-align: center;
       opacity: 0; /* Le schermate partono nascoste */
+      padding: 20px;
     }
     /* SFONDI GRADIENTE per ogni schermata */
     #screen1 {
@@ -44,7 +46,7 @@
     #screen3 {
       background: linear-gradient(135deg, #ffd1dc, #ffa1c5);
     }
-    /* Schermata 1 – Testo e pulsante */
+    /* SCHERMATA 1 – Testo e pulsante */
     .s1-text {
       font-size: 1.8em;
       margin: 20px;
@@ -65,7 +67,7 @@
     .btn:hover {
       background: #d81b60;
     }
-    /* Schermata 2 – Cuore e freccia */
+    /* SCHERMATA 2 – Cuore e freccia */
     #heart-container {
       position: relative;
       width: 150px;
@@ -86,15 +88,41 @@
       left: -120px;  /* parte fuori schermo */
       transform: translateY(-50%);
     }
-    /* Schermata 3 – Il biglietto */
+    /* Testo opzionale sotto il cuore */
+    .s2-text {
+      font-size: 1.2em;
+      margin-top: 20px;
+      opacity: 0;
+    }
+    /* SCHERMATA 3 – Il biglietto */
     .s3-text {
       font-size: 1.2em;
       line-height: 1.6;
-      max-width: 80%;
+      max-width: 90%;
       opacity: 0;
     }
+    /* Media Query per dispositivi mobili */
+    @media (max-width: 600px) {
+      .s1-text {
+        font-size: 1.4em;
+      }
+      .btn {
+        padding: 10px 20px;
+        font-size: 0.9em;
+      }
+      #heart-container, #heart {
+        width: 120px;
+        height: 120px;
+      }
+      .s2-text {
+        font-size: 1em;
+      }
+      .s3-text {
+        font-size: 1em;
+      }
+    }
     /* Ottimizzazione per transizioni */
-    .screen, .s1-text, .btn, #heart, #arrow, .s3-text {
+    .screen, .s1-text, .btn, #heart, #arrow, .s2-text, .s3-text {
       will-change: opacity, transform;
     }
   </style>
@@ -120,9 +148,7 @@
         <polygon points="50,32 40,26 40,38" fill="#fff"/>
       </svg>
     </div>
-    <div class="s2-text" style="opacity: 0; font-size: 1.2em; margin-top: 20px;">
-      L'amore arriva quando meno te lo aspetti...
-    </div>
+    <div class="s2-text">L'amore arriva quando meno te lo aspetti...</div>
   </div>
   
   <!-- SCHERMATA 3: IL BIGLIETTO -->
@@ -131,7 +157,7 @@
   </div>
   
   <script>
-    // Al caricamento, mostra la schermata 1
+    // Al caricamento, mostra la schermata 1 con fade-in
     document.addEventListener("DOMContentLoaded", function() {
       gsap.to("#screen1", { duration: 1, opacity: 1 });
       gsap.to(".s1-text", { duration: 1, opacity: 1, delay: 0.5 });
@@ -154,13 +180,13 @@
     });
     
     function animateArrowAndHeart() {
-      // Anima la freccia che si sposta in modo fluido verso il cuore
+      // Animazione fluida della freccia che si sposta verso il cuore
       gsap.to("#arrow", {
         duration: 1.2,
-        x: 220, // regola in base alla posizione del cuore
+        x: 220, // Regola in base alla posizione del cuore
         ease: "power2.inOut",
         onComplete: function() {
-          // Al momento dell'impatto, il cuore esegue un leggero battito
+          // Al contatto, il cuore esegue un leggero battito
           gsap.to("#heart", {
             duration: 0.2,
             scale: 1.1,
@@ -170,8 +196,8 @@
           });
           // Mostra il testo sotto il cuore
           gsap.to(".s2-text", { duration: 0.8, opacity: 1, delay: 0.5 });
-          // Dopo un attimo, passa alla schermata successiva
-          setTimeout(transitionToScreen3, 1500);
+          // Dopo un breve delay, passa alla schermata successiva
+          setTimeout(transitionToScreen3, 2000);
         }
       });
     }
@@ -195,9 +221,10 @@
       let index = 0;
       function typeWriter() {
         if(index < message.length) {
-          bigliettoElem.innerHTML += message[index] === "\n" ? "<br>" : message[index];
+          const currentChar = message.charAt(index);
+          bigliettoElem.innerHTML += (currentChar === "\n") ? "<br>" : currentChar;
           index++;
-          setTimeout(typeWriter, 40);
+          setTimeout(typeWriter, 80); // Velocità di 80ms per carattere (più lenta)
         }
       }
       gsap.to("#biglietto", { duration: 0.5, opacity: 1, onComplete: typeWriter });

@@ -2,29 +2,27 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Biglietto d'Amore - San Valentino</title>
-  <!-- Google Fonts: Poppins per un look moderno ed elegante -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
-  <!-- GSAP per animazioni fluide -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Biglietto d'Amore - San Valentino Pixel Art</title>
+  <!-- Font in stile pixel art -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <!-- GSAP per animazioni -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.1/gsap.min.js"></script>
   <style>
-    /* RESET E STILI GLOBALI */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Poppins', sans-serif;
+    /* Global styles per effetto pixel art */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
       overflow: hidden;
-      background: #f8f0f8;
-      color: #333;
+      background: #000;
+      font-family: 'Press Start 2P', cursive;
+      color: #fff;
+      image-rendering: pixelated;
     }
     .screen {
       position: absolute;
-      top: 0;
-      left: 0;
+      top: 0; left: 0;
       width: 100%;
       height: 100%;
       display: flex;
@@ -32,175 +30,169 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      opacity: 0; /* Le schermate partono nascoste */
     }
-    /* SFONDI GRADIENTE per ogni schermata */
-    #screen1 {
-      background: linear-gradient(135deg, #ffe3e3, #fce1e1);
-    }
-    #screen2 {
-      background: linear-gradient(135deg, #fddde6, #ffc4d8);
-    }
-    #screen3 {
-      background: linear-gradient(135deg, #ffd1dc, #ffa1c5);
-    }
-    /* Schermata 1 – Testo e pulsante */
-    .s1-text {
-      font-size: 1.8em;
-      margin: 20px;
-      opacity: 0;
-    }
-    .btn {
-      background: #e91e63;
+    button {
+      background: #E91E63;
       color: #fff;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 30px;
-      font-size: 1em;
+      border: 2px solid #fff;
+      padding: 10px 20px;
       cursor: pointer;
+      font-size: 16px;
       margin-top: 20px;
-      opacity: 0;
-      transition: background 0.2s;
+      image-rendering: pixelated;
     }
-    .btn:hover {
-      background: #d81b60;
+    /* SCREEN 1: Introduzione */
+    #screen1 {
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
     }
-    /* Schermata 2 – Cuore e freccia */
-    #heart-container {
-      position: relative;
-      width: 150px;
-      height: 150px;
+    .s1-text {
+      font-size: 18px;
       margin-bottom: 20px;
-    }
-    /* Il cuore è un SVG */
-    #heart {
-      width: 150px;
-      height: 150px;
-    }
-    /* La freccia di Cupido */
-    #arrow {
-      position: absolute;
-      width: 100px;
-      height: auto;
-      top: 50%;
-      left: -120px;  /* parte fuori schermo */
-      transform: translateY(-50%);
-    }
-    /* Schermata 3 – Il biglietto */
-    .s3-text {
-      font-size: 1.2em;
-      line-height: 1.6;
-      max-width: 80%;
       opacity: 0;
     }
-    /* Ottimizzazione per transizioni */
-    .screen, .s1-text, .btn, #heart, #arrow, .s3-text {
-      will-change: opacity, transform;
+    /* SCREEN 2: Cuore e Freccia di Cupido */
+    #screen2 {
+      background: linear-gradient(135deg, #f8bbd0, #c2185b);
+      display: none;
+    }
+    #heartContainer {
+      position: relative;
+      width: 100px;
+      height: 100px;
+    }
+    /* Il cuore in pixel art */
+    #pixelHeart {
+      width: 100px;
+      height: 100px;
+      background: #E91E63;
+      clip-path: polygon(50% 0%, 100% 35%, 80% 100%, 50% 80%, 20% 100%, 0% 35%);
+      image-rendering: pixelated;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    /* La freccia di Cupido (SVG) */
+    #cupidArrow {
+      position: absolute;
+      width: 120px;
+      height: 20px;
+      top: 40px; /* posiziona la freccia per colpire il cuore */
+      left: -150px; /* partenza offscreen */
+      image-rendering: pixelated;
+    }
+    /* SCREEN 3: Il Biglietto */
+    #screen3 {
+      background: linear-gradient(135deg, #ff80ab, #ff4081);
+      display: none;
+      padding: 20px;
+    }
+    .s3-text {
+      font-size: 14px;
+      border-right: 2px solid rgba(255,255,255,0.7);
+      white-space: nowrap;
+      overflow: hidden;
+      width: 0; /* per effetto typewriter */
     }
   </style>
 </head>
 <body>
-  <!-- SCHERMATA 1: INTRODUZIONE -->
+  <!-- SCREEN 1: Introduzione -->
   <div id="screen1" class="screen">
     <div class="s1-text">C'è qualcosa che voglio dirti... ma non con le solite parole</div>
-    <button class="btn" id="continue-btn">Scopri di più</button>
+    <button id="btn1">Continua</button>
   </div>
   
-  <!-- SCHERMATA 2: IL CUORE COLPITO DALLA FRECCIA DI CUPIDO -->
+  <!-- SCREEN 2: Cuore colpito dalla freccia di Cupido -->
   <div id="screen2" class="screen">
-    <div id="heart-container">
-      <!-- Cuore SVG -->
-      <svg id="heart" viewBox="0 0 32 29.6">
-        <path fill="#e91e63" d="M23.6,0c-2.6,0-5,1.1-6.6,2.9C15.4,1.1,13,0,10.4,0C4.7,0,0,4.7,0,10.4c0,7.8,7.2,13.9,18,19.2l1.3,0.7
-          l1.3-0.7c10.8-5.3,18-11.4,18-19.2C32,4.7,27.3,0,23.6,0z"/>
+    <div id="heartContainer">
+      <div id="pixelHeart"></div>
+      <svg id="cupidArrow" viewBox="0 0 120 20">
+        <!-- Forma semplice della freccia -->
+        <polygon points="0,10 80,10 80,0 120,15 80,30 80,20 0,20" fill="#fff"/>
       </svg>
-      <!-- Freccia di Cupido -->
-      <svg id="arrow" viewBox="0 0 64 64">
-        <line x1="0" y1="32" x2="50" y2="32" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
-        <polygon points="50,32 40,26 40,38" fill="#fff"/>
-      </svg>
-    </div>
-    <div class="s2-text" style="opacity: 0; font-size: 1.2em; margin-top: 20px;">
-      L'amore arriva quando meno te lo aspetti...
     </div>
   </div>
   
-  <!-- SCHERMATA 3: IL BIGLIETTO -->
+  <!-- SCREEN 3: Il Biglietto -->
   <div id="screen3" class="screen">
-    <div class="s3-text" id="biglietto"></div>
+    <div class="s3-text" id="finalMsg"></div>
   </div>
   
   <script>
-    // Al caricamento, mostra la schermata 1
-    document.addEventListener("DOMContentLoaded", function() {
-      gsap.to("#screen1", { duration: 1, opacity: 1 });
-      gsap.to(".s1-text", { duration: 1, opacity: 1, delay: 0.5 });
-      gsap.to("#continue-btn", { duration: 1, opacity: 1, delay: 1 });
-    });
+    // Usiamo un easing a steps per dare l'effetto "pixelato"
+    const stepsEase = "steps(10)";
     
-    // Schermata 1 → Schermata 2
-    document.getElementById("continue-btn").addEventListener("click", function() {
+    // SCREEN 1: Fade in del testo
+    gsap.to(".s1-text", { duration: 1, opacity: 1, ease: stepsEase, delay: 0.5 });
+    
+    // Passaggio da Screen 1 a Screen 2 al click
+    document.getElementById("btn1").addEventListener("click", function() {
       if(navigator.vibrate) navigator.vibrate(50);
       gsap.to("#screen1", {
-        duration: 0.8,
-        opacity: 0,
-        onComplete: function() {
+        duration: 0.8, 
+        opacity: 0, 
+        ease: stepsEase,
+        onComplete: function(){
           document.getElementById("screen1").style.display = "none";
           document.getElementById("screen2").style.display = "flex";
-          gsap.to("#screen2", { duration: 0.8, opacity: 1 });
-          animateArrowAndHeart();
+          gsap.fromTo("#screen2", { opacity: 0 }, { duration: 0.8, opacity: 1, ease: stepsEase });
+          animateArrow();
         }
       });
     });
     
-    function animateArrowAndHeart() {
-      // Anima la freccia che si sposta in modo fluido verso il cuore
-      gsap.to("#arrow", {
-        duration: 1.2,
-        x: 220, // regola in base alla posizione del cuore
-        ease: "power2.inOut",
+    // Funzione per animare la freccia che colpisce il cuore
+    function animateArrow() {
+      gsap.to("#cupidArrow", {
+        duration: 1,
+        x: 180, // sposta la freccia fino al cuore (aggiusta se necessario)
+        ease: stepsEase,
         onComplete: function() {
-          // Al momento dell'impatto, il cuore esegue un leggero battito
-          gsap.to("#heart", {
+          // Effetto "scossa" sul cuore per enfatizzare il colpo
+          gsap.to("#pixelHeart", {
             duration: 0.2,
-            scale: 1.1,
+            x: -5,
             yoyo: true,
             repeat: 3,
-            ease: "power1.inOut"
+            ease: stepsEase
           });
-          // Mostra il testo sotto il cuore
-          gsap.to(".s2-text", { duration: 0.8, opacity: 1, delay: 0.5 });
-          // Dopo un attimo, passa alla schermata successiva
-          setTimeout(transitionToScreen3, 1500);
+          // Dopo il colpo, aspetta un attimo e passa al biglietto
+          setTimeout(function(){
+            gsap.to("#screen2", {
+              duration: 0.8,
+              opacity: 0,
+              ease: stepsEase,
+              onComplete: function(){
+                document.getElementById("screen2").style.display = "none";
+                document.getElementById("screen3").style.display = "flex";
+                gsap.fromTo("#screen3", { opacity: 0 }, { duration: 0.8, opacity: 1, ease: stepsEase });
+                animateFinalMessage();
+              }
+            });
+          }, 1000);
         }
       });
     }
     
-    function transitionToScreen3() {
-      gsap.to("#screen2", {
-        duration: 0.8,
-        opacity: 0,
-        onComplete: function() {
-          document.getElementById("screen2").style.display = "none";
-          document.getElementById("screen3").style.display = "flex";
-          gsap.to("#screen3", { duration: 0.8, opacity: 1 });
-          showBigliettoMessage();
-        }
-      });
-    }
-    
-    function showBigliettoMessage() {
-      const message = "Ci siamo conosciuti alle superiori, anche se c'era qualcosa che non si è mai concretizzata.\nDopo tanto tempo, ci siamo rincontrati e abbiamo passato un Capodanno insieme. Da quel momento, tutto è cambiato.\n\nVoglio dirti quanto ci tengo: sei la mia prima ragazza, e nonostante le nostre differenze, il mio sentimento per te è autentico e profondo. Sono felice di averti nella mia vita.\n\nBuon San Valentino.";
-      const bigliettoElem = document.getElementById("biglietto");
-      let index = 0;
+    // Effetto typewriter per il messaggio finale nella Screen 3
+    function animateFinalMessage() {
+      const finalMsgElem = document.getElementById("finalMsg");
+      const finalMsg = "Ci siamo conosciuti alle superiori, anche se c'era qualcosa che non si è mai concretizzato.\nDopo tempo, ci siamo rincontrati e abbiamo passato un Capodanno insieme.\nDa quel momento, le cose sono cambiate.\n\nVoglio dirti quanto ci tengo a te: sei la mia prima ragazza e, nonostante le differenze culturali, quello che provo è genuino.\nSono felice di averti nella mia vita.\n\nBuon San Valentino.";
+      let i = 0;
+      let displayedText = "";
+      const speed = 40; // ms per carattere
       function typeWriter() {
-        if(index < message.length) {
-          bigliettoElem.innerHTML += message[index] === "\n" ? "<br>" : message[index];
-          index++;
-          setTimeout(typeWriter, 40);
+        if (i < finalMsg.length) {
+          let currentChar = finalMsg.charAt(i);
+          displayedText += (currentChar === "\n") ? "<br>" : currentChar;
+          finalMsgElem.innerHTML = displayedText;
+          i++;
+          // Espandi gradualmente la larghezza per simulare il cursore
+          finalMsgElem.style.width = (i * 0.6) + "em";
+          setTimeout(typeWriter, speed);
         }
       }
-      gsap.to("#biglietto", { duration: 0.5, opacity: 1, onComplete: typeWriter });
+      typeWriter();
     }
   </script>
 </body>
